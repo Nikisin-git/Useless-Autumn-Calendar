@@ -180,6 +180,23 @@ html, body {
 }
 .next-btn:hover { background: #ffe1e3; }
 
+/* More prominent primary CTA on screen 1 so the user finds it. */
+.next-btn-primary {
+  padding: 14px 28px;
+  font-size: 20px;
+  font-style: normal;
+  background: #ffd400;
+  color: #6a0080;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 4px #6a0080;
+  animation: pulseCTA 1.4s ease-in-out infinite;
+}
+.next-btn-primary:hover { background: #ffe700; }
+@keyframes pulseCTA {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.05); }
+}
+
 /* ---------- Screen 2 (captcha) ---------- */
 
 #screen-captcha {
