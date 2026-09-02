@@ -31,9 +31,12 @@ html, body {
   top: 8px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 12px;
-  font-weight: normal;
-  opacity: 0.7;
+  font-size: 13px;
+  font-weight: bold;
+  font-style: italic;
+  color: #ffd400;
+  font-family: "Times New Roman", Times, serif;
+  opacity: 0.9;
   white-space: nowrap;
 }
 
@@ -46,19 +49,16 @@ html, body {
 }
 
 .field label {
-  font-size: 10px;
-  opacity: 0.6;
+  font-size: 11px;
+  opacity: 0.85;
 }
 
 .field input {
   text-align: center;
   border: 1px dashed #fff;
-  background: rgba(0,0,0,0.15);
-  color: #fff;
+  background: #fff;
   padding: 2px 6px;
-  font-family: inherit;
   width: auto;
-  min-width: 60px;
   pointer-events: none;
 }
 
@@ -79,38 +79,89 @@ html, body {
 }
 .field button:active { background: #4a080e; }
 
-/* Positions & sizes per spec */
+/* Positions & sizes per spec; each field uses a different font family,
+   color, style and size for maximum visual noise. */
 .field-year {
   top: 40px;
   right: 40px;
 }
-.field-year input { font-size: 14px; }
+.field-year label {
+  font-family: "Courier New", monospace;
+  color: #ffd400;
+  font-style: italic;
+}
+.field-year input {
+  font-size: 14px;
+  font-family: "Courier New", monospace;
+  color: #005baa;
+  font-style: italic;
+  font-weight: bold;
+}
 
 .field-month {
   top: 50%;
   left: 40px;
   transform: translateY(-50%);
 }
-.field-month input { font-size: 24px; }
+.field-month label {
+  font-family: Georgia, serif;
+  color: #a0f0ff;
+}
+.field-month input {
+  font-size: 24px;
+  font-family: Georgia, serif;
+  color: #2e7a2e;
+  font-weight: bold;
+}
 
 .field-day {
   bottom: 20%;
   left: 32%;
 }
-.field-day input { font-size: 32px; }
+.field-day label {
+  font-family: "Comic Sans MS", cursive;
+  color: #ffb0c8;
+  font-style: italic;
+}
+.field-day input {
+  font-size: 32px;
+  font-family: "Comic Sans MS", cursive;
+  color: #c62828;
+  font-style: italic;
+}
 
 .field-hour {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
-.field-hour input { font-size: 64px; min-width: 120px; }
+.field-hour label {
+  font-family: Impact, "Arial Black", sans-serif;
+  color: #ffe700;
+}
+.field-hour input {
+  font-size: 64px;
+  font-family: Impact, "Arial Black", sans-serif;
+  color: #6a0080;
+  letter-spacing: 3px;
+}
 
 .field-minute {
-  right: 15%;
+  left: 55%;
   bottom: 15%;
 }
-.field-minute input { font-size: 48px; min-width: 100px; }
+.field-minute label {
+  font-family: "Trebuchet MS", sans-serif;
+  color: #b8ffb8;
+  font-style: italic;
+}
+.field-minute input {
+  font-size: 48px;
+  font-family: "Trebuchet MS", sans-serif;
+  color: #005c00;
+  font-weight: bold;
+  font-style: italic;
+}
 
 .next-btn {
   position: absolute;
@@ -120,8 +171,10 @@ html, body {
   background: #fff;
   color: #d21f2b;
   border: none;
-  font-family: inherit;
-  font-size: 14px;
+  font-family: "Verdana", sans-serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 15px;
   cursor: pointer;
   border-radius: 2px;
 }
@@ -140,9 +193,19 @@ html, body {
 
 #screen-captcha h2 {
   font-weight: normal;
-  font-size: 20px;
+  font-size: 22px;
   text-align: center;
   max-width: 700px;
+  font-family: Georgia, serif;
+  color: #fff5e6;
+  font-style: italic;
+}
+#screen-captcha h2 em {
+  font-family: "Courier New", monospace;
+  color: #ffd400;
+  font-size: 26px;
+  font-weight: bold;
+  font-style: normal;
 }
 
 .captcha-grid {
@@ -184,7 +247,11 @@ html, body {
 
 .msg {
   min-height: 20px;
-  font-size: 14px;
+  font-size: 16px;
+  font-family: "Courier New", monospace;
+  color: #ffd400;
+  font-style: italic;
+  font-weight: bold;
 }
 
 /* ---------- Screen 3 (game) ---------- */
@@ -200,10 +267,28 @@ html, body {
   right: 0;
   display: flex;
   justify-content: space-around;
-  font-size: 18px;
   z-index: 2;
   padding: 6px 12px;
   background: rgba(0,0,0,0.25);
+}
+
+.game-header > span:nth-child(1) {
+  font-family: Georgia, serif;
+  color: #ffe0a0;
+  font-style: italic;
+  font-size: 20px;
+  font-weight: bold;
+}
+.game-header > span:nth-child(2) {
+  font-family: "Courier New", monospace;
+  color: #b8ffb8;
+  font-size: 18px;
+}
+.game-header > span:nth-child(3) {
+  font-family: Impact, "Arial Black", sans-serif;
+  color: #ff9a3c;
+  font-size: 22px;
+  letter-spacing: 2px;
 }
 
 .game-field {
@@ -238,6 +323,10 @@ html, body {
   left: 50%;
   transform: translateX(-50%);
   font-weight: normal;
+  font-family: "Times New Roman", serif;
+  color: #ffe0a0;
+  font-style: italic;
+  font-size: 28px;
 }
 
 .save-summary {
@@ -245,11 +334,14 @@ html, body {
   top: 120px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 24px;
-  background: rgba(0,0,0,0.2);
+  font-size: 26px;
+  background: #fff;
+  color: #6a0080;
   padding: 12px 20px;
   border-radius: 4px;
   white-space: nowrap;
+  font-family: "Courier New", monospace;
+  font-weight: bold;
 }
 
 .btn-save-small {
@@ -266,7 +358,8 @@ html, body {
   cursor: pointer;
   line-height: 1;
   overflow: hidden;
-  font-family: inherit;
+  font-family: "Courier New", monospace;
+  font-style: italic;
 }
 
 .btn-save-big {
@@ -277,12 +370,14 @@ html, body {
   width: 200px;
   height: 64px;
   background: #b30000;
-  color: #fff;
+  color: #ffe700;
   font-size: 22px;
   font-weight: bold;
   border: 3px solid #fff;
   cursor: pointer;
-  font-family: inherit;
+  font-family: Impact, "Arial Black", sans-serif;
+  font-style: italic;
+  letter-spacing: 2px;
 }
 .btn-save-big:hover { background: #d40000; }
 
@@ -297,14 +392,21 @@ html, body {
 }
 
 #screen-success h1 {
-  font-size: 40px;
+  font-size: 44px;
+  font-family: Georgia, serif;
+  color: #ffe0a0;
+  font-style: italic;
+  font-weight: bold;
 }
 
 .success-summary {
-  font-size: 28px;
-  background: rgba(0,0,0,0.2);
+  font-size: 30px;
+  background: #fff;
+  color: #2e7a2e;
   padding: 12px 24px;
   border-radius: 6px;
+  font-family: "Courier New", monospace;
+  font-weight: bold;
 }
 
 #screen-success .next-btn {
