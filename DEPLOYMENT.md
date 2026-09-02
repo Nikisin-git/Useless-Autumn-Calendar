@@ -15,11 +15,17 @@
 ## Шаг 1. Получить исходники
 
 ```bash
-git clone https://github.com/Nikisin-git/useless-autumn-calendar.git
-cd useless-autumn-calendar
+git clone https://github.com/Nikisin-git/Useless-Autumn-Calendar.git
+cd Useless-Autumn-Calendar
 ```
 
-Либо скачать репозиторий архивом и распаковать.
+Обратите внимание: команды `git clone` и `cd` — **две отдельные строки**.
+Если склеить их без переноса (`...calendar.gitcd useless-autumn-calendar`),
+Git решит, что URL заканчивается на `.gitcd`, и вернёт «Repository not found».
+Регистр в имени репозитория — тоже как выше (`Useless-Autumn-Calendar`).
+
+Либо скачать репозиторий архивом со страницы GitHub (кнопка **Code → Download ZIP**)
+и распаковать.
 
 ## Шаг 2. Запустить локальный HTTP-сервер
 
