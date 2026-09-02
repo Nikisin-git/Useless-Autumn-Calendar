@@ -359,6 +359,21 @@
 
   document.getElementById('btn-save-small').addEventListener('click', saveEvent);
   document.getElementById('btn-save-big').addEventListener('click', saveEvent);
+  document.getElementById('btn-save-reset').addEventListener('click', resetCurrentEvent);
+
+  function resetCurrentEvent() {
+    const n = new Date();
+    state.event = {
+      year: n.getFullYear(),
+      month: n.getMonth() + 1,
+      day: n.getDate(),
+      hour: (n.getHours() + 1) % 24,
+      minute: 0
+    };
+    state.progress = { dateTimeSet: false, captchaSolved: false, gamePassed: false };
+    renderFields();
+    showScreen('dateTime');
+  }
 
   // ---------- Success screen ----------
   function renderSuccessSummary() {
