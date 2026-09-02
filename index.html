@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280">
+  <title>Календарь-Абсурд</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Screen 1: date/time input -->
+  <section id="screen-dateTime" class="screen">
+    <h1 class="title-dt">Введите дату и время события</h1>
+
+    <div class="field field-year" data-field="year">
+      <label>Год</label>
+      <input type="text" id="input-year" readonly>
+      <div class="btns">
+        <button class="repeat" data-act="year:-10">−10</button>
+        <button class="repeat" data-act="year:-1">−1</button>
+        <button class="repeat" data-act="year:+1">+1</button>
+        <button class="repeat" data-act="year:+10">+10</button>
+      </div>
+    </div>
+
+    <div class="field field-month" data-field="month">
+      <label>Месяц</label>
+      <input type="text" id="input-month" readonly>
+      <div class="btns">
+        <button class="repeat" data-act="month:-1">−1</button>
+        <button class="repeat" data-act="month:+1">+1</button>
+      </div>
+    </div>
+
+    <div class="field field-day" data-field="day">
+      <label>День</label>
+      <input type="text" id="input-day" readonly>
+      <div class="btns">
+        <button class="repeat" data-act="day:-1">−1</button>
+        <button class="repeat" data-act="day:+1">+1</button>
+      </div>
+    </div>
+
+    <div class="field field-hour" data-field="hour">
+      <label>Час</label>
+      <input type="text" id="input-hour" readonly>
+      <div class="btns">
+        <button class="repeat" data-act="hour:-1">−1</button>
+        <button class="repeat" data-act="hour:+1">+1</button>
+      </div>
+    </div>
+
+    <div class="field field-minute" data-field="minute">
+      <label>Минута</label>
+      <input type="text" id="input-minute" readonly>
+      <div class="btns">
+        <button class="repeat" data-act="minute:-10">−10</button>
+        <button class="repeat" data-act="minute:-1">−1</button>
+        <button class="repeat" data-act="minute:+1">+1</button>
+        <button class="repeat" data-act="minute:+10">+10</button>
+      </div>
+    </div>
+
+    <button id="btn-dt-next" class="next-btn">Далее</button>
+  </section>
+
+  <!-- Screen 2: captcha -->
+  <section id="screen-captcha" class="screen" hidden>
+    <h2>Отметьте все изображения, на которых есть <em>осень, календарь или цифра 3</em></h2>
+    <div id="captcha-grid" class="captcha-grid"></div>
+    <button id="btn-captcha-check" class="next-btn">Проверить</button>
+    <div id="captcha-msg" class="msg"></div>
+  </section>
+
+  <!-- Screen 3: mini-game -->
+  <section id="screen-game" class="screen" hidden>
+    <div class="game-header">
+      <span id="game-task">Поймайте 7 календарей</span>
+      <span id="game-score">Поймано: 0 / 7</span>
+      <span id="game-timer">Осталось: 20 с</span>
+    </div>
+    <div id="game-field" class="game-field"></div>
+  </section>
+
+  <!-- Screen 4: save -->
+  <section id="screen-save" class="screen" hidden>
+    <h2>Сводка события</h2>
+    <div id="save-summary" class="save-summary"></div>
+    <button id="btn-save-small" class="btn-save-small">Сохранить</button>
+    <button id="btn-save-big" class="btn-save-big">Отменить всё</button>
+  </section>
+
+  <!-- Screen 5: success -->
+  <section id="screen-success" class="screen" hidden>
+    <h1>Событие зарегистрировано!</h1>
+    <div id="success-summary" class="success-summary"></div>
+    <button id="btn-restart" class="next-btn">Создать ещё событие</button>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

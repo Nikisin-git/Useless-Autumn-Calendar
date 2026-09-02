@@ -1,0 +1,312 @@
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #d21f2b;
+  color: #fff;
+  font-family: "Comic Sans MS", "Comic Sans", cursive, system-ui, sans-serif;
+  overflow: hidden;
+}
+
+.screen {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  min-width: 1280px;
+  min-height: 720px;
+}
+
+.screen[hidden] { display: none !important; }
+
+/* ---------- Screen 1 (date/time) ---------- */
+
+#screen-dateTime {
+  overflow: hidden;
+}
+
+.title-dt {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: normal;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.field {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.field label {
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+.field input {
+  text-align: center;
+  border: 1px dashed #fff;
+  background: rgba(0,0,0,0.15);
+  color: #fff;
+  padding: 2px 6px;
+  font-family: inherit;
+  width: auto;
+  min-width: 60px;
+  pointer-events: none;
+}
+
+.field .btns {
+  display: flex;
+  gap: 2px;
+}
+
+.field button {
+  cursor: pointer;
+  border: 1px solid #fff;
+  background: #7a0e17;
+  color: #fff;
+  font-family: inherit;
+  padding: 2px 6px;
+  font-size: 11px;
+  min-width: 26px;
+}
+.field button:active { background: #4a080e; }
+
+/* Positions & sizes per spec */
+.field-year {
+  top: 40px;
+  right: 40px;
+}
+.field-year input { font-size: 14px; }
+
+.field-month {
+  top: 50%;
+  left: 40px;
+  transform: translateY(-50%);
+}
+.field-month input { font-size: 24px; }
+
+.field-day {
+  bottom: 20%;
+  left: 32%;
+}
+.field-day input { font-size: 32px; }
+
+.field-hour {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.field-hour input { font-size: 64px; min-width: 120px; }
+
+.field-minute {
+  right: 15%;
+  bottom: 15%;
+}
+.field-minute input { font-size: 48px; min-width: 100px; }
+
+.next-btn {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  padding: 8px 20px;
+  background: #fff;
+  color: #d21f2b;
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.next-btn:hover { background: #ffe1e3; }
+
+/* ---------- Screen 2 (captcha) ---------- */
+
+#screen-captcha {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+#screen-captcha h2 {
+  font-weight: normal;
+  font-size: 20px;
+  text-align: center;
+  max-width: 700px;
+}
+
+.captcha-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 140px);
+  grid-template-rows: repeat(3, 140px);
+  gap: 6px;
+  padding: 6px;
+  background: rgba(0,0,0,0.2);
+}
+
+.captcha-cell {
+  width: 140px;
+  height: 140px;
+  background: #fff;
+  border: 3px solid transparent;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+.captcha-cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.captcha-cell.selected {
+  border-color: #ffd400;
+  box-shadow: 0 0 0 3px #ffd400 inset;
+}
+
+#screen-captcha .next-btn {
+  position: static;
+  align-self: center;
+}
+
+.msg {
+  min-height: 20px;
+  font-size: 14px;
+}
+
+/* ---------- Screen 3 (game) ---------- */
+
+#screen-game {
+  overflow: hidden;
+}
+
+.game-header {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  font-size: 18px;
+  z-index: 2;
+  padding: 6px 12px;
+  background: rgba(0,0,0,0.25);
+}
+
+.game-field {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.falling {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  font-size: 40px;
+  line-height: 48px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ---------- Screen 4 (save) ---------- */
+
+#screen-save {
+  position: relative;
+}
+
+#screen-save h2 {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: normal;
+}
+
+.save-summary {
+  position: absolute;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  background: rgba(0,0,0,0.2);
+  padding: 12px 20px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.btn-save-small {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  width: 12px;
+  height: 32px;
+  padding: 0;
+  font-size: 6px;
+  background: #888;
+  color: #fff;
+  border: 1px solid #444;
+  cursor: pointer;
+  line-height: 1;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+.btn-save-big {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 64px;
+  background: #b30000;
+  color: #fff;
+  font-size: 22px;
+  font-weight: bold;
+  border: 3px solid #fff;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn-save-big:hover { background: #d40000; }
+
+/* ---------- Screen 5 (success) ---------- */
+
+#screen-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+#screen-success h1 {
+  font-size: 40px;
+}
+
+.success-summary {
+  font-size: 28px;
+  background: rgba(0,0,0,0.2);
+  padding: 12px 24px;
+  border-radius: 6px;
+}
+
+#screen-success .next-btn {
+  position: static;
+}
