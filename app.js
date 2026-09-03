@@ -9,7 +9,8 @@
       month: now.getMonth() + 1,
       day: now.getDate(),
       hour: (now.getHours() + 1) % 24,
-      minute: 0
+      minute: 0,
+      title: ''
     },
     progress: {
       dateTimeSet: false,
@@ -112,10 +113,47 @@
     if (name === 'success') renderSuccessSummary();
   }
 
+  // Confirmation modal + title input modal, then captcha.
+  const modalConfirm = document.getElementById('modal-confirm');
+  const modalTitle   = document.getElementById('modal-title');
+  const inputTitle   = document.getElementById('input-title');
+  const titleMsg     = document.getElementById('title-msg');
+
+  function openModal(el)  { el.hidden = false; }
+  function closeModal(el) { el.hidden = true; }
+
   document.getElementById('btn-dt-next').addEventListener('click', () => {
-    state.progress.dateTimeSet = true;
-    showScreen('captcha');
+    openModal(modalConfirm);
   });
+
+  document.getElementById('btn-confirm-no').addEventListener('click', () => {
+    closeModal(modalConfirm);
+  });
+
+  document.getElementById('btn-confirm-yes').addEventListener('click', () => {
+    closeModal(modalConfirm);
+    inputTitle.value = state.event.title || '';
+    titleMsg.textContent = '';
+    openModal(modalTitle);
+    setTimeout(() => inputTitle.focus(), 0);
+  });
+
+  document.getElementById('btn-title-next').addEventListener('click', submitTitle);
+  inputTitle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); submitTitle(); }
+  });
+
+  function submitTitle() {
+    const v = inputTitle.value.trim();
+    if (!v) {
+      titleMsg.textContent = 'Введите название события.';
+      return;
+    }
+    state.event.title = v;
+    state.progress.dateTimeSet = true;
+    closeModal(modalTitle);
+    showScreen('captcha');
+  }
 
   // ---------- Captcha ----------
   // Each pool entry: {src, correct: bool}
@@ -324,8 +362,13 @@
     return `${p2(e.day)}.${p2(e.month)}.${e.year} в ${p2(e.hour)}:${p2(e.minute)}`;
   }
 
+  function formatSummary() {
+    const t = state.event.title;
+    return t ? `«${t}» — ${formatDT()}` : formatDT();
+  }
+
   function renderSaveSummary() {
-    document.getElementById('save-summary').textContent = formatDT();
+    document.getElementById('save-summary').textContent = formatSummary();
   }
 
   function uuidv4() {
@@ -345,7 +388,8 @@
     const record = {
       id: uuidv4(),
       createdAt: new Date().toISOString(),
-      datetime: dt.toISOString()
+      datetime: dt.toISOString(),
+      title: state.event.title || ''
     };
     let arr = [];
     try {
@@ -368,7 +412,8 @@
       month: n.getMonth() + 1,
       day: n.getDate(),
       hour: (n.getHours() + 1) % 24,
-      minute: 0
+      minute: 0,
+      title: ''
     };
     state.progress = { dateTimeSet: false, captchaSolved: false, gamePassed: false };
     renderFields();
@@ -377,7 +422,7 @@
 
   // ---------- Success screen ----------
   function renderSuccessSummary() {
-    document.getElementById('success-summary').textContent = formatDT();
+    document.getElementById('success-summary').textContent = formatSummary();
   }
 
   document.getElementById('btn-restart').addEventListener('click', () => {
@@ -387,7 +432,8 @@
       month: n.getMonth() + 1,
       day: n.getDate(),
       hour: (n.getHours() + 1) % 24,
-      minute: 0
+      minute: 0,
+      title: ''
     };
     state.progress = { dateTimeSet: false, captchaSolved: false, gamePassed: false };
     renderFields();
