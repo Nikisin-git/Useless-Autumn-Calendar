@@ -71,13 +71,24 @@
     <button id="btn-restart" class="next-btn">Создать ещё событие</button>
   </section>
 
-  <!-- Modal: confirmation -->
+  <!-- Modal: confirmation (step 1) -->
   <div id="modal-confirm" class="modal" hidden>
     <div class="modal-card">
       <div class="modal-text" id="modal-confirm-text">Вы уверены, что хотите назначить событие на эту дату?</div>
       <div class="modal-actions">
         <button id="btn-confirm-yes" class="modal-btn modal-btn-yes">Да</button>
         <button id="btn-confirm-no"  class="modal-btn modal-btn-no">Нет</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: confirmation (step 2) -->
+  <div id="modal-confirm2" class="modal" hidden>
+    <div class="modal-card">
+      <div class="modal-text">Вы точно уверены, что хотите зарегистрировать событие?</div>
+      <div class="modal-actions">
+        <button id="btn-confirm2-yes" class="modal-btn modal-btn-yes">Да</button>
+        <button id="btn-confirm2-no"  class="modal-btn modal-btn-no">Нет</button>
       </div>
     </div>
   </div>

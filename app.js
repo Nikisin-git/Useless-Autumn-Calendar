@@ -288,11 +288,12 @@
     if (name === 'success') renderSuccessSummary();
   }
 
-  // Confirmation modal + title input modal, then captcha.
-  const modalConfirm = document.getElementById('modal-confirm');
-  const modalTitle   = document.getElementById('modal-title');
-  const inputTitle   = document.getElementById('input-title');
-  const titleMsg     = document.getElementById('title-msg');
+  // Two-step confirmation, then title input, then captcha.
+  const modalConfirm  = document.getElementById('modal-confirm');
+  const modalConfirm2 = document.getElementById('modal-confirm2');
+  const modalTitle    = document.getElementById('modal-title');
+  const inputTitle    = document.getElementById('input-title');
+  const titleMsg      = document.getElementById('title-msg');
 
   function openModal(el)  { el.hidden = false; }
   function closeModal(el) { el.hidden = true; }
@@ -307,6 +308,15 @@
 
   document.getElementById('btn-confirm-yes').addEventListener('click', () => {
     closeModal(modalConfirm);
+    openModal(modalConfirm2);
+  });
+
+  document.getElementById('btn-confirm2-no').addEventListener('click', () => {
+    closeModal(modalConfirm2);
+  });
+
+  document.getElementById('btn-confirm2-yes').addEventListener('click', () => {
+    closeModal(modalConfirm2);
     inputTitle.value = state.event.title || '';
     titleMsg.textContent = '';
     openModal(modalTitle);
