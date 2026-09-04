@@ -20,147 +20,164 @@ html, body {
 
 .screen[hidden] { display: none !important; }
 
-/* ---------- Screen 1 (date/time) ---------- */
+/* ---------- Screen 1 (calendar ribbon + time picker) ---------- */
 
 #screen-dateTime {
   overflow: hidden;
-}
-
-.title-dt {
-  position: absolute;
-  top: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 13px;
-  font-weight: bold;
-  font-style: italic;
-  color: #ffd400;
-  font-family: "Times New Roman", Times, serif;
-  opacity: 0.9;
-  white-space: nowrap;
-}
-
-.field {
-  position: absolute;
   display: flex;
   flex-direction: column;
+}
+
+.cal-hint {
+  padding: 10px 16px 8px;
+  font-family: Georgia, serif;
+  font-style: italic;
+  color: #ffe0a0;
+  font-size: 14px;
+  text-align: center;
+}
+
+.calendar-ribbon {
+  flex: 1 1 auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  background: #b31923;
+  border-top: 2px solid #7a0e17;
+  border-bottom: 2px solid #7a0e17;
+}
+
+/* One month = an inline-flex column of a tiny header + a 7-wide grid.
+   Adjacent months share edges with only a 1px hairline in the same red,
+   so the eye reads them as one continuous ribbon. */
+.cal-month {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: top;
+  padding: 4px 0 8px;
+  border-right: 1px solid #a01620;
+}
+
+.cal-month-label {
+  font-family: "Courier New", monospace;
+  font-size: 10px;
+  color: #d64650;
+  padding: 0 6px 2px;
+  opacity: 0.55;
+  letter-spacing: 0.5px;
+}
+
+.cal-week-row {
+  display: flex;
+}
+
+.cal-daycol-header {
+  font-family: "Courier New", monospace;
+  font-size: 10px;
+  color: #ffd400;
+  opacity: 0.7;
+  text-align: center;
+  width: 30px;
+  padding: 2px 0;
+}
+
+.cal-cell {
+  width: 30px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, serif;
+  font-size: 14px;
+  color: #fff;
+  background: #c31c26;
+  border: 1px solid #a01620;
+  cursor: pointer;
+  user-select: none;
+}
+.cal-cell:hover { background: #e5323d; }
+.cal-cell.cal-empty {
+  background: transparent;
+  border-color: transparent;
+  cursor: default;
+}
+.cal-cell.cal-selected {
+  background: #ffd400;
+  color: #6a0080;
+  font-weight: bold;
+  border-color: #6a0080;
+}
+.cal-cell.cal-today {
+  outline: 1px dashed #ffe700;
+  outline-offset: -3px;
+}
+
+/* Bottom time bar */
+.cal-timebar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 10px 16px;
+  background: rgba(0,0,0,0.15);
+}
+
+.cal-selected-label {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
+  color: #fff5e6;
+}
+.cal-selected-label #cal-selected {
+  font-family: "Courier New", monospace;
+  font-style: normal;
+  color: #ffd400;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.cal-time-field {
+  display: inline-flex;
   align-items: center;
   gap: 4px;
 }
 
-.field label {
-  font-size: 11px;
-  opacity: 0.85;
+.cal-time-field label {
+  font-family: "Trebuchet MS", sans-serif;
+  color: #b8ffb8;
+  font-style: italic;
+  font-size: 13px;
+  margin-right: 4px;
 }
 
-.field input {
+.cal-time-field input {
   text-align: center;
   border: 1px dashed #fff;
   background: #fff;
+  color: #6a0080;
   padding: 2px 6px;
-  width: auto;
+  font-family: Impact, "Arial Black", sans-serif;
+  font-size: 24px;
   pointer-events: none;
+  width: auto;
 }
 
-.field .btns {
-  display: flex;
-  gap: 2px;
-}
-
-.field button {
+.cal-time-field button.repeat {
   cursor: pointer;
   border: 1px solid #fff;
   background: #7a0e17;
   color: #fff;
   font-family: inherit;
-  padding: 2px 6px;
-  font-size: 11px;
-  min-width: 26px;
+  padding: 4px 8px;
+  font-size: 12px;
+  min-width: 30px;
 }
-.field button:active { background: #4a080e; }
+.cal-time-field button.repeat:active { background: #4a080e; }
 
-/* Positions & sizes per spec; each field uses a different font family,
-   color, style and size for maximum visual noise. */
-.field-year {
-  top: 40px;
-  right: 40px;
-}
-.field-year label {
-  font-family: "Courier New", monospace;
-  color: #ffd400;
-  font-style: italic;
-}
-.field-year input {
-  font-size: 14px;
-  font-family: "Courier New", monospace;
-  color: #005baa;
-  font-style: italic;
-  font-weight: bold;
-}
-
-.field-month {
-  top: 50%;
-  left: 40px;
-  transform: translateY(-50%);
-}
-.field-month label {
-  font-family: Georgia, serif;
-  color: #a0f0ff;
-}
-.field-month input {
-  font-size: 24px;
-  font-family: Georgia, serif;
-  color: #2e7a2e;
-  font-weight: bold;
-}
-
-.field-day {
-  bottom: 20%;
-  left: 32%;
-}
-.field-day label {
-  font-family: "Comic Sans MS", cursive;
-  color: #ffb0c8;
-  font-style: italic;
-}
-.field-day input {
-  font-size: 32px;
-  font-family: "Comic Sans MS", cursive;
-  color: #c62828;
-  font-style: italic;
-}
-
-.field-hour {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-.field-hour label {
-  font-family: Impact, "Arial Black", sans-serif;
-  color: #ffe700;
-}
-.field-hour input {
-  font-size: 64px;
-  font-family: Impact, "Arial Black", sans-serif;
-  color: #6a0080;
-  letter-spacing: 3px;
-}
-
-.field-minute {
-  left: 55%;
-  bottom: 15%;
-}
-.field-minute label {
-  font-family: "Trebuchet MS", sans-serif;
-  color: #b8ffb8;
-  font-style: italic;
-}
-.field-minute input {
-  font-size: 48px;
-  font-family: "Trebuchet MS", sans-serif;
-  color: #005c00;
-  font-weight: bold;
-  font-style: italic;
+/* Override next-btn positioning when it sits inside the calendar timebar. */
+.cal-timebar .next-btn,
+.cal-timebar .next-btn-primary {
+  position: static;
 }
 
 .next-btn {

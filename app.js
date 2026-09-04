@@ -43,11 +43,18 @@
   }
 
   function renderFields() {
-    document.getElementById('input-year').value   = String(state.event.year);
-    document.getElementById('input-month').value  = String(state.event.month).padStart(2, '0');
-    document.getElementById('input-day').value    = String(state.event.day).padStart(2, '0');
-    document.getElementById('input-hour').value   = String(state.event.hour).padStart(2, '0');
-    document.getElementById('input-minute').value = String(state.event.minute).padStart(2, '0');
+    const p2 = n => String(n).padStart(2, '0');
+    const hEl = document.getElementById('input-hour');
+    const mEl = document.getElementById('input-minute');
+    if (hEl) hEl.value = p2(state.event.hour);
+    if (mEl) mEl.value = p2(state.event.minute);
+    const sel = document.getElementById('cal-selected');
+    if (sel) {
+      const RU_MONTHS = ['января','февраля','марта','апреля','мая','июня',
+        'июля','августа','сентября','октября','ноября','декабря'];
+      sel.textContent = `${p2(state.event.day)} ${RU_MONTHS[state.event.month - 1]} ${state.event.year}`;
+    }
+    updateCalendarSelection();
   }
 
   function applyDelta(field, delta) {
@@ -93,11 +100,177 @@
 
   document.querySelectorAll('.repeat').forEach(bindRepeatButton);
 
-  // Block direct keyboard input on all fields (they are readonly, but also swallow keys)
-  document.querySelectorAll('.field input').forEach(inp => {
+  // Block direct keyboard input on all readonly inputs
+  document.querySelectorAll('#screen-dateTime input[readonly]').forEach(inp => {
     inp.addEventListener('keydown', e => e.preventDefault());
     inp.addEventListener('paste',   e => e.preventDefault());
   });
+
+  // ---------- Calendar ribbon (screen 1) ----------
+  // Day-of-week columns sorted ALPHABETICALLY (RU): Вс, Вт, Пн, Пт, Ср, Сб, Чт.
+  // Native getDay(): 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat.
+  const DAY_LABELS_ALPHA = ['Вс', 'Вт', 'Пн', 'Пт', 'Ср', 'Сб', 'Чт'];
+  const GETDAY_TO_ALPHA_COL = { 0: 0, 2: 1, 1: 2, 5: 3, 3: 4, 6: 5, 4: 6 };
+
+  const RIBBON_MONTHS_BACK    = 60;   // 5 years back
+  const RIBBON_MONTHS_FORWARD = 60;   // 5 years forward
+  const RIBBON_LOAD_MORE      = 24;   // extend by this many months on scroll near edge
+
+  const ribbonEl = document.getElementById('calendar-ribbon');
+  let ribbonMinYearMonth = null; // { year, month } — earliest month present
+  let ribbonMaxYearMonth = null; // latest month present
+
+  function ymKey(y, m) { return `${y}-${m}`; }
+
+  function buildMonthElement(year, month /* 1..12 */) {
+    // Rows are calendar weeks (Sunday-anchored); columns are alphabetized weekdays.
+    const el = document.createElement('div');
+    el.className = 'cal-month';
+    el.dataset.ym = ymKey(year, month);
+
+    const label = document.createElement('div');
+    label.className = 'cal-month-label';
+    label.textContent = `${String(month).padStart(2,'0')}·${year}`;
+    el.appendChild(label);
+
+    const headerRow = document.createElement('div');
+    headerRow.className = 'cal-week-row';
+    for (const lbl of DAY_LABELS_ALPHA) {
+      const h = document.createElement('div');
+      h.className = 'cal-daycol-header';
+      h.textContent = lbl;
+      headerRow.appendChild(h);
+    }
+    el.appendChild(headerRow);
+
+    const daysCount = daysInMonth(year, month);
+    const grid = Array.from({ length: 6 }, () => Array(7).fill(null));
+    let row = 0;
+    for (let d = 1; d <= daysCount; d++) {
+      const dt = new Date(year, month - 1, d);
+      const gd = dt.getDay();
+      if (gd === 0 && d > 1) row++;
+      const col = GETDAY_TO_ALPHA_COL[gd];
+      grid[row][col] = d;
+    }
+    for (let r = 0; r < 6; r++) {
+      if (grid[r].every(x => x === null)) continue;
+      const rowEl = document.createElement('div');
+      rowEl.className = 'cal-week-row';
+      for (let c = 0; c < 7; c++) {
+        const cellEl = document.createElement('div');
+        const d = grid[r][c];
+        if (d === null) {
+          cellEl.className = 'cal-cell cal-empty';
+        } else {
+          cellEl.className = 'cal-cell';
+          cellEl.textContent = String(d);
+          cellEl.dataset.year  = year;
+          cellEl.dataset.month = month;
+          cellEl.dataset.day   = d;
+        }
+        rowEl.appendChild(cellEl);
+      }
+      el.appendChild(rowEl);
+    }
+    return el;
+  }
+
+  function addMonths(baseYear, baseMonth, delta) {
+    // month is 1..12
+    let idx = (baseYear * 12) + (baseMonth - 1) + delta;
+    const y = Math.floor(idx / 12);
+    const m = (idx % 12 + 12) % 12 + 1;
+    return { year: y, month: m };
+  }
+
+  function initCalendarRibbon() {
+    ribbonEl.innerHTML = '';
+    const today = new Date();
+    const centerY = today.getFullYear();
+    const centerM = today.getMonth() + 1;
+
+    for (let i = -RIBBON_MONTHS_BACK; i <= RIBBON_MONTHS_FORWARD; i++) {
+      const { year, month } = addMonths(centerY, centerM, i);
+      ribbonEl.appendChild(buildMonthElement(year, month));
+    }
+    ribbonMinYearMonth = addMonths(centerY, centerM, -RIBBON_MONTHS_BACK);
+    ribbonMaxYearMonth = addMonths(centerY, centerM,  RIBBON_MONTHS_FORWARD);
+
+    // Scroll to today's month
+    const target = ribbonEl.querySelector(`[data-ym="${ymKey(centerY, centerM)}"]`);
+    if (target) {
+      const targetLeft = target.offsetLeft - (ribbonEl.clientWidth - target.offsetWidth) / 2;
+      ribbonEl.scrollLeft = Math.max(0, targetLeft);
+    }
+
+    // Mark today's cell for orientation (still muted)
+    const todayCell = ribbonEl.querySelector(
+      `.cal-cell[data-year="${centerY}"][data-month="${centerM}"][data-day="${today.getDate()}"]`
+    );
+    if (todayCell) todayCell.classList.add('cal-today');
+
+    updateCalendarSelection();
+  }
+
+  function extendRibbon(direction) {
+    // direction: -1 to prepend (older), +1 to append (newer)
+    if (direction < 0) {
+      const prevScrollWidth = ribbonEl.scrollWidth;
+      const prevScrollLeft  = ribbonEl.scrollLeft;
+      const frag = document.createDocumentFragment();
+      for (let i = 1; i <= RIBBON_LOAD_MORE; i++) {
+        const { year, month } = addMonths(ribbonMinYearMonth.year, ribbonMinYearMonth.month, -i);
+        // prepend later — build in fragment then insert reverse
+        const el = buildMonthElement(year, month);
+        // insert at beginning of ribbon so order stays chronological left→right
+        if (frag.firstChild) frag.insertBefore(el, frag.firstChild);
+        else frag.appendChild(el);
+      }
+      ribbonEl.insertBefore(frag, ribbonEl.firstChild);
+      ribbonMinYearMonth = addMonths(ribbonMinYearMonth.year, ribbonMinYearMonth.month, -RIBBON_LOAD_MORE);
+      // Keep viewport steady while content was prepended
+      ribbonEl.scrollLeft = prevScrollLeft + (ribbonEl.scrollWidth - prevScrollWidth);
+    } else {
+      const frag = document.createDocumentFragment();
+      for (let i = 1; i <= RIBBON_LOAD_MORE; i++) {
+        const { year, month } = addMonths(ribbonMaxYearMonth.year, ribbonMaxYearMonth.month, i);
+        frag.appendChild(buildMonthElement(year, month));
+      }
+      ribbonEl.appendChild(frag);
+      ribbonMaxYearMonth = addMonths(ribbonMaxYearMonth.year, ribbonMaxYearMonth.month, RIBBON_LOAD_MORE);
+    }
+    updateCalendarSelection();
+  }
+
+  // Delegated click on ribbon cells
+  ribbonEl.addEventListener('click', (e) => {
+    const cell = e.target.closest('.cal-cell');
+    if (!cell || cell.classList.contains('cal-empty')) return;
+    state.event.year  = parseInt(cell.dataset.year, 10);
+    state.event.month = parseInt(cell.dataset.month, 10);
+    state.event.day   = parseInt(cell.dataset.day, 10);
+    renderFields();
+  });
+
+  // Endless scroll: extend when close to either edge
+  ribbonEl.addEventListener('scroll', () => {
+    const nearLeft  = ribbonEl.scrollLeft < 400;
+    const nearRight = (ribbonEl.scrollLeft + ribbonEl.clientWidth) > (ribbonEl.scrollWidth - 400);
+    if (nearLeft)  extendRibbon(-1);
+    if (nearRight) extendRibbon(+1);
+  }, { passive: true });
+
+  function updateCalendarSelection() {
+    if (!ribbonEl) return;
+    ribbonEl.querySelectorAll('.cal-cell.cal-selected').forEach(el => el.classList.remove('cal-selected'));
+    const s = ribbonEl.querySelector(
+      `.cal-cell[data-year="${state.event.year}"][data-month="${state.event.month}"][data-day="${state.event.day}"]`
+    );
+    if (s) s.classList.add('cal-selected');
+  }
+
+  initCalendarRibbon();
 
   // ---------- Screen switching ----------
   const screens = ['dateTime', 'captcha', 'game', 'save', 'success'];
