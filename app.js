@@ -128,9 +128,11 @@
     el.className = 'cal-month';
     el.dataset.ym = ymKey(year, month);
 
+    const RU_MONTHS_NOM = ['Январь','Февраль','Март','Апрель','Май','Июнь',
+      'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
     const label = document.createElement('div');
     label.className = 'cal-month-label';
-    label.textContent = `${String(month).padStart(2,'0')}·${year}`;
+    label.textContent = `${RU_MONTHS_NOM[month - 1]} ${year}`;
     el.appendChild(label);
 
     const headerRow = document.createElement('div');

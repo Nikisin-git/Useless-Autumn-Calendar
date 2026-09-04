@@ -41,7 +41,8 @@ html, body {
   flex: 1 1 auto;
   overflow-x: auto;
   overflow-y: hidden;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
   background: #b31923;
   border-top: 2px solid #7a0e17;
   border-bottom: 2px solid #7a0e17;
@@ -53,18 +54,20 @@ html, body {
 .cal-month {
   display: inline-flex;
   flex-direction: column;
-  vertical-align: top;
-  padding: 4px 0 8px;
+  flex: 0 0 auto;
+  padding: 8px 0 8px;
   border-right: 1px solid #a01620;
 }
 
 .cal-month-label {
-  font-family: "Courier New", monospace;
-  font-size: 10px;
-  color: #d64650;
-  padding: 0 6px 2px;
-  opacity: 0.55;
-  letter-spacing: 0.5px;
+  font-family: Papyrus, "Papyrus Condensed", "Chalkduster", "Comic Sans MS", fantasy;
+  font-weight: bold;
+  font-size: 20px;
+  color: #ffd400;
+  padding: 0 6px 8px;
+  letter-spacing: 1px;
+  text-align: center;
+  text-shadow: 1px 1px 0 #6a0080;
 }
 
 .cal-week-row {
