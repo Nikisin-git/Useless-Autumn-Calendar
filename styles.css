@@ -543,3 +543,40 @@ html, body {
   color: #c62828;
   font-weight: bold;
 }
+
+.modal-card-wide {
+  min-width: 560px;
+  max-width: 720px;
+}
+
+/* Virtual keyboard grid */
+.vkbd {
+  display: grid;
+  grid-template-columns: repeat(9, 48px);
+  gap: 4px;
+  padding: 6px;
+  background: #f0e6ff;
+  border: 2px solid #6a0080;
+  border-radius: 4px;
+}
+
+.vkbd button {
+  width: 48px;
+  height: 40px;
+  font-family: "Courier New", monospace;
+  font-size: 18px;
+  font-weight: bold;
+  color: #6a0080;
+  background: #fff;
+  border: 1px solid #6a0080;
+  border-radius: 3px;
+  cursor: pointer;
+  user-select: none;
+}
+.vkbd button:hover  { background: #ffe700; }
+.vkbd button:active { background: #ffd400; }
+.vkbd button.vkbd-wide     { grid-column: span 3; width: auto; }
+.vkbd button.vkbd-backspace {
+  background: #eee;
+  color: #c62828;
+}

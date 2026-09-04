@@ -93,11 +93,12 @@
     </div>
   </div>
 
-  <!-- Modal: title input -->
+  <!-- Modal: title input (virtual chaotic keyboard) -->
   <div id="modal-title" class="modal" hidden>
-    <div class="modal-card">
+    <div class="modal-card modal-card-wide">
       <div class="modal-text">Введите название события:</div>
-      <input type="text" id="input-title" class="modal-input" maxlength="80" placeholder="Например: День рождения">
+      <input type="text" id="input-title" class="modal-input" maxlength="80" readonly placeholder="Кликайте по клавишам ниже">
+      <div id="vkbd" class="vkbd"></div>
       <div class="modal-actions">
         <button id="btn-title-next" class="modal-btn modal-btn-yes">Далее</button>
       </div>

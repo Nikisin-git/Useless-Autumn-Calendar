@@ -319,14 +319,56 @@
     closeModal(modalConfirm2);
     inputTitle.value = state.event.title || '';
     titleMsg.textContent = '';
+    renderVirtualKeyboard();
     openModal(modalTitle);
-    setTimeout(() => inputTitle.focus(), 0);
   });
 
+  // Block ALL keyboard input on the title field — only the virtual keyboard
+  // (rendered below) can enter characters.
+  ['keydown', 'keypress', 'keyup', 'paste', 'drop', 'input'].forEach(ev =>
+    inputTitle.addEventListener(ev, (e) => e.preventDefault())
+  );
+
+  // ---------- Virtual keyboard (chaotic Russian layout) ----------
+  const RU_LETTERS = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'.split('');
+  const vkbdEl = document.getElementById('vkbd');
+  const MAX_TITLE = 80;
+
+  function renderVirtualKeyboard() {
+    vkbdEl.innerHTML = '';
+    // Shuffle letters into a chaotic order
+    const shuffled = shuffle(RU_LETTERS);
+    for (const ch of shuffled) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = ch;
+      b.addEventListener('click', () => appendChar(ch));
+      vkbdEl.appendChild(b);
+    }
+    // Space (wide)
+    const spaceBtn = document.createElement('button');
+    spaceBtn.type = 'button';
+    spaceBtn.className = 'vkbd-wide';
+    spaceBtn.textContent = 'Пробел';
+    spaceBtn.addEventListener('click', () => appendChar(' '));
+    vkbdEl.appendChild(spaceBtn);
+    // Backspace (wide)
+    const bkBtn = document.createElement('button');
+    bkBtn.type = 'button';
+    bkBtn.className = 'vkbd-wide vkbd-backspace';
+    bkBtn.textContent = '⌫ Стереть';
+    bkBtn.addEventListener('click', () => {
+      inputTitle.value = inputTitle.value.slice(0, -1);
+    });
+    vkbdEl.appendChild(bkBtn);
+  }
+
+  function appendChar(ch) {
+    if (inputTitle.value.length >= MAX_TITLE) return;
+    inputTitle.value += ch;
+  }
+
   document.getElementById('btn-title-next').addEventListener('click', submitTitle);
-  inputTitle.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); submitTitle(); }
-  });
 
   function submitTitle() {
     const v = inputTitle.value.trim();
